@@ -64,21 +64,45 @@ public class DefaultOAuthProvider implements OAuthProvider {
         // invalidate current credentials, if any
         consumer.setTokenWithSecret(null, null);
 
+        if (callbackUrl == null) {
+            callbackUrl = OAuth.OUT_OF_BAND;
+        }
+
+        requestTokenEndpointUrl += "?" + OAuth.OAUTH_CALLBACK + "="
+                + OAuth.percentEncode(callbackUrl);
         retrieveToken(requestTokenEndpointUrl);
 
-        return authorizationWebsiteUrl + "?oauth_token="
-                + OAuth.percentEncode(consumer.getToken()) + "&"
-                + OAuth.OAUTH_CALLBACK + "=" + OAuth.percentEncode(callbackUrl);
+        if (consumer.isOAuth10a()) {
+            // OAuth 1.0a detected; don't include the callback in the auth URL
+            return authorizationWebsiteUrl + "?" + OAuth.OAUTH_TOKEN + "="
+                    + OAuth.percentEncode(consumer.getToken());
+        } else {
+            return authorizationWebsiteUrl + "?" + OAuth.OAUTH_TOKEN + "="
+                    + OAuth.percentEncode(consumer.getToken()) + "&"
+                    + OAuth.OAUTH_CALLBACK + "="
+                    + OAuth.percentEncode(callbackUrl);
+        }
     }
 
     public void retrieveAccessToken() throws OAuthMessageSignerException,
             OAuthNotAuthorizedException, OAuthExpectationFailedException,
             OAuthCommunicationException {
+        retrieveAccessToken(null);
+    }
+
+    public void retrieveAccessToken(String oauthVerifier)
+            throws OAuthMessageSignerException, OAuthNotAuthorizedException,
+            OAuthExpectationFailedException, OAuthCommunicationException {
 
         if (consumer.getToken() == null || consumer.getTokenSecret() == null) {
             throw new OAuthExpectationFailedException(
                     "Authorized request token or token secret not set. "
                             + "Did you retrieve an authorized request token before?");
+        }
+
+        if (oauthVerifier != null) {
+            accessTokenEndpointUrl += "?" + OAuth.OAUTH_VERIFIER + "="
+                    + OAuth.percentEncode(oauthVerifier);
         }
 
         retrieveToken(accessTokenEndpointUrl);
@@ -123,6 +147,7 @@ public class DefaultOAuthProvider implements OAuthProvider {
             }
 
             consumer.setTokenWithSecret(token, secret);
+            consumer.setParameters(paramMap);
 
         } catch (OAuthNotAuthorizedException e) {
             throw e;

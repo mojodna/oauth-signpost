@@ -34,6 +34,8 @@ public class DefaultOAuthConsumer implements OAuthConsumer {
 
     private String token;
 
+    private Map<String, String> parameters;
+
     private SignatureMethod signatureMethod;
 
     private OAuthMessageSigner messageSigner;
@@ -72,6 +74,14 @@ public class DefaultOAuthConsumer implements OAuthConsumer {
         messageSigner.setTokenSecret(tokenSecret);
     }
 
+    public void setParameters(Map<String, String> parameters) {
+        this.parameters = parameters;
+    }
+
+    public Map<String, String> getParameters() {
+        return parameters;
+    }
+
     public String getToken() {
         return token;
     }
@@ -86,6 +96,12 @@ public class DefaultOAuthConsumer implements OAuthConsumer {
 
     public String getConsumerSecret() {
         return this.consumerSecret;
+    }
+
+    public boolean isOAuth10a() {
+        String oauthCallbackConfirmed = getParameters().get(
+                OAuth.OAUTH_CALLBACK_CONFIRMED);
+        return (oauthCallbackConfirmed != null && oauthCallbackConfirmed.equals(Boolean.TRUE.toString()));
     }
 
     private Map<String, String> buildOAuthParameterMap() {
@@ -113,7 +129,7 @@ public class DefaultOAuthConsumer implements OAuthConsumer {
         for (String key : oauthParams.keySet()) {
             String value = oauthParams.get(key);
             sb.append(oauthHeaderElement(key, value));
-            sb.append(",");
+            sb.append(", ");
         }
 
         sb.append(oauthHeaderElement(OAuth.OAUTH_SIGNATURE, signature));

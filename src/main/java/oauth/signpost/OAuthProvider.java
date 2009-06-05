@@ -33,9 +33,8 @@ public interface OAuthProvider {
     /**
      * Queries the service provider for a request token.
      * <p>
-     * <b>Pre-conditions:</b> the {@link DefaultOAuthConsumer} connected to
-     * this provider must have a valid consumer key and consumer secret already
-     * set.
+     * <b>Pre-conditions:</b> the {@link DefaultOAuthConsumer} connected to this
+     * provider must have a valid consumer key and consumer secret already set.
      * </p>
      * <p>
      * <b>Post-conditions:</b> the {@link DefaultOAuthConsumer} connected to
@@ -65,8 +64,8 @@ public interface OAuthProvider {
     /**
      * Queries the service provider for an access token.
      * <p>
-     * <b>Pre-conditions:</b> the {@link DefaultOAuthConsumer} connected to
-     * this provider must have a valid consumer key, consumer secret, authorized
+     * <b>Pre-conditions:</b> the {@link DefaultOAuthConsumer} connected to this
+     * provider must have a valid consumer key, consumer secret, authorized
      * request token and token secret already set.
      * </p>
      * <p>
@@ -87,4 +86,32 @@ public interface OAuthProvider {
     public void retrieveAccessToken() throws OAuthMessageSignerException,
             OAuthNotAuthorizedException, OAuthExpectationFailedException,
             OAuthCommunicationException;
+
+    /**
+     * Queries the service provider for an access token.
+     * <p>
+     * <b>Pre-conditions:</b> the {@link DefaultOAuthConsumer} connected to this
+     * provider must have a valid consumer key, consumer secret, authorized
+     * request token and token secret already set.
+     * </p>
+     * <p>
+     * <b>Post-conditions:</b> the {@link DefaultOAuthConsumer} connected to
+     * this provider will have an access token and token secret set.
+     * </p>
+     * 
+     * @param oauthVerifier
+     *            Value of 'oauth_verifier' from the service provider.
+     * @throws OAuthMessageSignerException
+     *             if signing the request failed
+     * @throws OAuthNotAuthorizedException
+     *             if the service provider rejected the consumer
+     * @throws OAuthExpectationFailedException
+     *             if required parameters were not correctly set by the consumer
+     *             or service provider
+     * @throws OAuthCommunicationException
+     *             if server communication failed
+     */
+    public void retrieveAccessToken(String oauthVerifier)
+            throws OAuthMessageSignerException, OAuthNotAuthorizedException,
+            OAuthExpectationFailedException, OAuthCommunicationException;
 }

@@ -14,6 +14,8 @@
  */
 package oauth.signpost;
 
+import java.util.Map;
+
 import oauth.signpost.exception.OAuthMessageSignerException;
 
 import org.apache.http.HttpRequest;
@@ -32,4 +34,10 @@ public interface OAuthConsumer {
     public String getConsumerKey();
 
     public String getConsumerSecret();
+
+    public void setParameters(Map<String, String> paramMap);
+
+    public Map<String, String> getParameters();
+
+    public boolean isOAuth10a();
 }

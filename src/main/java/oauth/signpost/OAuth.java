@@ -57,8 +57,14 @@ public class OAuth {
 
     public static final String OAUTH_CALLBACK = "oauth_callback";
 
+    public static final String OAUTH_CALLBACK_CONFIRMED = "oauth_callback_confirmed";
+
+    public static final String OAUTH_VERIFIER = "oauth_verifier";
+
     private static final PercentEscaper percentEncoder = new PercentEscaper(
             "-._~", false);
+
+    public static final String OUT_OF_BAND = "oob";
 
     public static String percentEncode(String s) {
         if (s == null) {
