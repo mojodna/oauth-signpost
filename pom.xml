@@ -70,7 +70,7 @@ Signpost has been designed to work in conjunction with the Apache HttpComponents
     <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpclient</artifactId>
-        <version>4.0-beta2</version>
+        <version>4.5.13</version>
         <scope>compile</scope>
     </dependency>
   </dependencies>
